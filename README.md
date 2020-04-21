@@ -1,0 +1,2 @@
+# linuxrelated
+configurations and scripts
