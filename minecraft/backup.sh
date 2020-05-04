@@ -1,23 +1,24 @@
-#!/bin/bash
+#!/usr/bin/bash
+whoami 
 
-echo "############################ BEGIN #################################" >> backup.lg
-date >> backup.lg
-#script -q -c "scp -P 19222 mkob@kobmine.garbagefile.net:/home/mkob/minecraftbe/kobmine/backups/*.gz /home/mattk/backups/kobmine/" >> backup.lg
-#script -q -c "scp -P 19222 mkob@kobmine.garbagefile.net:/home/mkob/minecraftbe/kobcreate/backups/*.gz /home/mattk/backups/kobcreate/" >> backup.lg
+ps -f
 
-script -q -c "scp -P 19222 mkob@kobmine.garbagefile.net:/home/mkob/minecraftbe/backupAll/*.gz /home/mattk/backups/" >>
-backup.lg
+echo "############################ BEGIN SCP #################################" 
+
+script -q -c "scp -P 19222 -i '/home/mattk/.ssh/id_mine_rsa' mkob@kobmine.garbagefile.net:/home/mkob/minecraftbe/backupAll/\*.gz /home/mattk/Backups/minecraft/" 
+
+echo "############################ END SCP #################################" 
+
+echo "############################ BEGIN local tar  #################################" 
+
+script -c "tar -zcvf '/home/mattk/backupstorage/$(date '+%Y-%m-%d_%H:%M:%S').ALL.backups.tar.gz' --absolute-names /home/mattk/Backups/minecraft/" 
+
+echo "############################ END local tar  #################################" 
+
+echo "############################ BEGIN local clean-up  #################################" 
+
+script -c "rm /home/mattk/Backups/minecraft/*.gz" 
+
+echo "############################ END local clean-up  #################################" 
 
 
-date >> backup.lg
-echo "############################ END #################################" >> backup.lg
-
-#sed -i -e 's/\r/\n/g' backup.lg
-
-#tar -zcvf "/home/mattk/backupstorage/$(date '+%Y-%m-%d').kobmine.backups.tar.gz" ./backups/kobmine
-#tar -zcvf "/home/mattk/backupstorage/$(date '+%Y-%m-%d').kobcreate.backups.tar.gz" ./backups/kobcreate
-
-tar -zcvf "/home/mattk/backupstorage/$(date '+%Y-%m-%d').ALL.backups.tar.gz" ./backups/
-
-# rm /home/mattk/backups/kobmine/*.gz
-# rm /home/mattk/backups/kobcreate/*.gz
