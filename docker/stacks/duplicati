@@ -1,0 +1,18 @@
+---
+version: "2.1"
+services:
+  duplicati:
+    image: linuxserver/duplicati
+    container_name: duplicati
+    environment:
+      - PUID=998
+      - PGID=100
+      - TZ=America/Denver
+    volumes:
+      - /srv/dev-disk-by-uuid-dbeec77c-776f-4225-8919-e55548f9136b/Config/Duplicati:/config #Config Files
+      - /srv/dev-disk-by-uuid-dbeec77c-776f-4225-8919-e55548f9136b/backups:/backups #Storage for Backup
+      - /srv/dev-disk-by-uuid-dbeec77c-776f-4225-8919-e55548f9136b/Config:/ConfigBackup #What to Backup
+      - /srv/dev-disk-by-uuid-dbeec77c-776f-4225-8919-e55548f9136b/Databases:/DatabaseBackup #What to Backup
+    ports:
+      - 8200:8200
+    restart: unless-stopped

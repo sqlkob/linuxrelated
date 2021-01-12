@@ -1,0 +1,15 @@
+
+# make macvlan if one does not exist
+sudo docker network create -d macvlan -o parent=eth0 --subnet=192.168.68.0/24 --gateway=192.168.68.1 --ip-range=192.168.68.150/31 ag_serverpi
+sudo docker network create -d macvlan -o parent=eth0 --subnet=192.168.68.0/24 --gateway=192.168.68.1 --ip-range=192.168.68.150/32 PiHole_MyMacVlan_Net
+Error response from daemon: failed to allocate gateway (10.0.12.1): Address already in use
+
+
+#volume creation
+sudo docker volume create agwork
+sudo docker volume create agconf
+
+
+#create container
+
+docker run --name adguardhome -v agwork:/opt/adguardhome/work -v agconf:/opt/adguardhome/conf -p 53:53/tcp -p 53:53/udp -p 67:67/udp -p 68:68/tcp -p 68:68/udp -p 80:80/tcp -p 443:443/tcp -p 853:853/tcp -p 3000:3000/tcp -d adguard/adguardhome
