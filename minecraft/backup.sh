@@ -21,4 +21,4 @@ script -c "rm /home/mattk/Backups/minecraft/*.gz"
 
 echo "############################ END local clean-up  #################################" 
 
-
+##end## 
