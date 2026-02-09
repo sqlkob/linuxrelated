@@ -1,0 +1,79 @@
+name: ai-stack
+
+services:
+  heimdall:
+    image: linuxserver/heimdall
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+    volumes:
+      - /dockers/heimdall/config:/config
+    ports:
+      - 8002:80
+      - 8001:443
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - /home/mkob/.ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: unless-stopped
+
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:main
+    ports:
+      - "3000:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - /home/mkob/.openwebui:/app/backend/data
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  stable_diffusion:
+    image: sdwebui/stable-diffusion-webui:latest
+    ports:
+      - "7860:7860"
+    volumes:
+      - /home/mkob/sd/models/Stable-diffusion:/stable-diffusion-webui/models/Stable-diffusion
+      - /home/mkob/sd/config:/data/config
+    environment:
+      - CLI_ARGS=--xformers --medvram --no-half --no-half-vae --opt-split-attention
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+    restart: unless-stopped
+
+  ollama-model-pack:
+    image: curlimages/curl:latest
+    depends_on:
+      - ollama
+    entrypoint: >
+      sh -c "
+      echo 'Waiting for Ollama...' &&
+      until curl -s http://ollama:11434/api/tags >/dev/null; do sleep 2; done &&
+      echo 'Ollama is ready. Installing model pack...' &&
+
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"mistral\"}' &&
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"llama3.1\"}' &&
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"phi3\"}' &&
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"codellama\"}' &&
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"gemma2\"}' &&
+
+      # NEW: DeepSeek Coder V2 Lite
+      curl -s http://ollama:11434/api/pull -d '{\"name\": \"deepseek-coder:6.7b\"}' &&
+
+      echo 'Model pack installation complete.'
+      "
+    restart: "no"

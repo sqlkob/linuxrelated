@@ -1,0 +1,45 @@
+name: docker-stack
+
+version: "3"
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    container_name: hbbs
+    ports:
+      - 21115:21115/tcp
+      - 21116:21116/tcp
+      - 21116:21116/udp
+      - 21118:21118/tcp
+    volumes:
+      - /home/mkob/rustdesk/data:/root
+    command: hbbs -r 192.168.68.126
+    restart: unless-stopped
+
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    container_name: hbbr
+    ports:
+      - 21117:21117/tcp
+      - 21119:21119/tcp
+    volumes:
+      - /home/mkob/rustdesk/data:/root
+    command: hbbr -k _
+    restart: unless-stopped
+
+  mc:
+    image: itzg/minecraft-server:latest
+    tty: true
+    stdin_open: true
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "PAPER"
+      DIFFICULTY: "2"
+      SEED: "3744180140205423750"
+      LEVEL: "KobKhaos-Island-Village-Beach"
+      RESOURCE_PACK: "https://github.com/sqlkob/minecraft-resourcepacks/raw/refs/heads/master/packs/FreshAnimations_v1.10.3.zip"
+      RESOURCE_PACK_SHA1: "17D3630F0942E0D0D93F58FC998F780F06B81E63"
+      RESOURCE_PACK_REQUIRED: "true"
+    volumes:
+      - "./data:/data"
