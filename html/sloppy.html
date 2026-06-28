@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sloppy - Dashboard Cosmic Horror 🦑</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #0a1a1f 0%, #1a3a2f 50%, #0f1a0f 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0,0,0,0.8) 100%);
+            animation: pulse-dark 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #7fff7f;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 20px rgba(127, 255, 127, 0.5), 3px 3px 6px rgba(0,0,0,0.8);
+            animation: flicker 3s infinite;
+            letter-spacing: 2px;
+        }
+
+        .mascot-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Cosmic Horror Entity */
+        .horror {
+            width: 300px;
+            height: 350px;
+            position: relative;
+            animation: float-ominous 4s ease-in-out infinite;
+            filter: drop-shadow(0 0 30px rgba(100, 255, 100, 0.3));
+        }
+
+        /* Head/Body */
+        .head {
+            width: 220px;
+            height: 200px;
+            background: radial-gradient(ellipse at 50% 40%, #2d5a3d 0%, #1a3a2a 60%, #0d1f15 100%);
+            border-radius: 50% 50% 40% 40%;
+            position: absolute;
+            top: 60px;
+            left: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7), inset 0 -20px 30px rgba(0,0,0,0.4);
+            z-index: 2;
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        /* Pulsing Veins */
+        .vein {
+            position: absolute;
+            background: linear-gradient(90deg, transparent, rgba(127, 255, 127, 0.3), transparent);
+            height: 2px;
+            animation: pulse-vein 2s ease-in-out infinite;
+        }
+
+        .vein1 {
+            width: 80px;
+            top: 40px;
+            left: 30px;
+            transform: rotate(-15deg);
+        }
+
+        .vein2 {
+            width: 60px;
+            top: 60px;
+            right: 20px;
+            transform: rotate(20deg);
+            animation-delay: 0.5s;
+        }
+
+        .vein3 {
+            width: 70px;
+            top: 100px;
+            left: 20px;
+            transform: rotate(10deg);
+            animation-delay: 1s;
+        }
+
+        /* Tentacles (replacing ears) */
+        .tentacle {
+            width: 25px;
+            height: 140px;
+            background: linear-gradient(180deg, #1a4a2a 0%, #0a2a1a 50%, #051510 100%);
+            border-radius: 40% 40% 50% 50%;
+            position: absolute;
+            top: 20px;
+            z-index: 1;
+            box-shadow: 3px 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .tentacle::after {
+            content: '';
+            width: 12px;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(127, 255, 127, 0.1) 0%, transparent 100%);
+            border-radius: 40% 40% 50% 50%;
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tentacle.left-outer {
+            left: 10px;
+            transform: rotate(-45deg);
+            animation: writhe-left-outer 3s ease-in-out infinite;
+        }
+
+        .tentacle.left-inner {
+            left: 35px;
+            transform: rotate(-20deg);
+            animation: writhe-left-inner 3.5s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+
+        .tentacle.right-inner {
+            right: 35px;
+            transform: rotate(20deg);
+            animation: writhe-right-inner 3.2s ease-in-out infinite;
+            animation-delay: 0.3s;
+        }
+
+        .tentacle.right-outer {
+            right: 10px;
+            transform: rotate(45deg);
+            animation: writhe-right-outer 3.7s ease-in-out infinite;
+            animation-delay: 0.7s;
+        }
+
+        /* Multiple Eyes */
+        .eye {
+            width: 45px;
+            height: 50px;
+            background: radial-gradient(circle at 50% 50%, #ffff99 0%, #cccc66 40%, #1a1a0a 100%);
+            border-radius: 50% 50% 45% 45%;
+            position: absolute;
+            top: 75px;
+            border: 3px solid #0a1a0a;
+            animation: blink-horror 5s infinite;
+            box-shadow: 0 0 20px rgba(255, 255, 153, 0.4), inset 0 5px 10px rgba(0,0,0,0.3);
+            z-index: 3;
+        }
+
+        .eye.left {
+            left: 45px;
+        }
+
+        .eye.right {
+            right: 45px;
+        }
+
+        /* Additional smaller eyes */
+        .eye-small {
+            width: 25px;
+            height: 28px;
+            background: radial-gradient(circle at 50% 50%, #ffff99 0%, #cccc66 40%, #1a1a0a 100%);
+            border-radius: 50%;
+            position: absolute;
+            border: 2px solid #0a1a0a;
+            box-shadow: 0 0 15px rgba(255, 255, 153, 0.3);
+            z-index: 3;
+            animation: blink-horror 5s infinite;
+        }
+
+        .eye-small.extra-left {
+            top: 110px;
+            left: 30px;
+            animation-delay: 0.5s;
+        }
+
+        .eye-small.extra-right {
+            top: 110px;
+            right: 30px;
+            animation-delay: 1s;
+        }
+
+        .eye-small.forehead {
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 1.5s;
+        }
+
+        /* Pupil/Iris */
+        .iris {
+            width: 25px;
+            height: 25px;
+            background: radial-gradient(circle at 40% 40%, #1a1a1a, #000000);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: look-around 4s ease-in-out infinite;
+        }
+
+        .iris-small {
+            width: 12px;
+            height: 12px;
+            background: #000000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Pupil */
+        .pupil {
+            width: 8px;
+            height: 18px;
+            background: #ff0000;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.8);
+        }
+
+        /* Eye glow */
+        .eye-glow {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 153, 0.6);
+            border-radius: 50%;
+            position: absolute;
+            top: 30%;
+            right: 25%;
+            z-index: 4;
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        /* Mouth/Maw */
+        .maw {
+            width: 100px;
+            height: 60px;
+            background: radial-gradient(ellipse at 50% 0%, #000000 0%, #0a1a0a 100%);
+            border-radius: 0 0 50% 50%;
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            box-shadow: inset 0 5px 20px rgba(0,0,0,0.9), 0 0 15px rgba(127, 255, 127, 0.2);
+        }
+
+        /* Teeth */
+        .teeth {
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            top: 0;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .tooth {
+            width: 8px;
+            height: 15px;
+            background: linear-gradient(180deg, #e0e0e0 0%, #a0a0a0 100%);
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        /* Face Tentacles */
+        .face-tentacle {
+            position: absolute;
+            bottom: 20px;
+            width: 15px;
+            height: 60px;
+            background: linear-gradient(180deg, #1a4a2a 0%, #0a2a1a 100%);
+            border-radius: 40%;
+            z-index: 5;
+            animation: writhe-face 2s ease-in-out infinite;
+        }
+
+        .face-tentacle:nth-child(1) {
+            left: 35%;
+            animation-delay: 0s;
+        }
+
+        .face-tentacle:nth-child(2) {
+            left: 42%;
+            height: 70px;
+            animation-delay: 0.3s;
+        }
+
+        .face-tentacle:nth-child(3) {
+            left: 50%;
+            transform: translateX(-50%);
+            height: 80px;
+            animation-delay: 0.6s;
+        }
+
+        .face-tentacle:nth-child(4) {
+            right: 42%;
+            height: 70px;
+            animation-delay: 0.9s;
+        }
+
+        .face-tentacle:nth-child(5) {
+            right: 35%;
+            animation-delay: 1.2s;
+        }
+
+        /* Eldritch Marks */
+        .mark {
+            background: radial-gradient(ellipse, rgba(127, 255, 127, 0.2) 0%, transparent 100%);
+            border-radius: 50%;
+            position: absolute;
+            opacity: 0.6;
+        }
+
+        .mark1 {
+            width: 40px;
+            height: 35px;
+            top: 45px;
+            left: 15px;
+            transform: rotate(-15deg);
+        }
+
+        .mark2 {
+            width: 35px;
+            height: 30px;
+            top: 55px;
+            right: 20px;
+            transform: rotate(10deg);
+        }
+
+        /* Aura */
+        .aura {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(127, 255, 127, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+            animation: aura-pulse 3s ease-in-out infinite;
+        }
+
+        /* Speech Bubble */
+        .speech-bubble {
+            background: #0a1a0a;
+            padding: 20px 30px;
+            border-radius: 20px;
+            position: absolute;
+            top: 80px;
+            right: -280px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.8), 0 0 20px rgba(127, 255, 127, 0.3);
+            animation: fade-in-out-horror 4s ease-in-out infinite;
+            border: 2px solid rgba(127, 255, 127, 0.3);
+            z-index: 20;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -18px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-right-color: rgba(127, 255, 127, 0.3);
+            border-left: 0;
+        }
+
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            top: 22px;
+            left: -14px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-right-color: #0a1a0a;
+            border-left: 0;
+            z-index: 2;
+        }
+
+        .speech-bubble p {
+            color: #7fff7f;
+            font-size: 1.2rem;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 0 0 10px rgba(127, 255, 127, 0.5);
+            font-style: italic;
+        }
+
+        /* Eldritch Symbol Decorations */
+        .symbols {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .symbol {
+            position: absolute;
+            opacity: 0.2;
+            color: #7fff7f;
+            animation: drift-symbol 20s linear infinite;
+            text-shadow: 0 0 10px rgba(127, 255, 127, 0.5);
+        }
+
+        /* Message */
+        .message {
+            color: #7fff7f;
+            font-size: 1.5rem;
+            margin-top: 2rem;
+            text-shadow: 0 0 15px rgba(127, 255, 127, 0.5), 2px 2px 4px rgba(0,0,0,0.8);
+            font-style: italic;
+        }
+
+        /* Animations */
+        @keyframes float-ominous {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-15px) rotate(-2deg);
+            }
+            75% {
+                transform: translateY(-10px) rotate(2deg);
+            }
+        }
+
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.03);
+            }
+        }
+
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.95;
+            }
+            75% {
+                opacity: 0.98;
+            }
+        }
+
+        @keyframes writhe-left-outer {
+            0%, 100% {
+                transform: rotate(-45deg);
+            }
+            50% {
+                transform: rotate(-60deg);
+            }
+        }
+
+        @keyframes writhe-left-inner {
+            0%, 100% {
+                transform: rotate(-20deg);
+            }
+            50% {
+                transform: rotate(-35deg);
+            }
+        }
+
+        @keyframes writhe-right-inner {
+            0%, 100% {
+                transform: rotate(20deg);
+            }
+            50% {
+                transform: rotate(35deg);
+            }
+        }
+
+        @keyframes writhe-right-outer {
+            0%, 100% {
+                transform: rotate(45deg);
+            }
+            50% {
+                transform: rotate(60deg);
+            }
+        }
+
+        @keyframes writhe-face {
+            0%, 100% {
+                transform: translateY(0) scaleY(1);
+            }
+            50% {
+                transform: translateY(8px) scaleY(1.2);
+            }
+        }
+
+        @keyframes blink-horror {
+            0%, 90%, 100% {
+                transform: scaleY(1);
+            }
+            95% {
+                transform: scaleY(0.1);
+            }
+        }
+
+        @keyframes look-around {
+            0%, 100% {
+                transform: translate(-50%, -50%);
+            }
+            25% {
+                transform: translate(calc(-50% + 6px), calc(-50% - 3px));
+            }
+            75% {
+                transform: translate(calc(-50% - 6px), calc(-50% + 3px));
+            }
+        }
+
+        @keyframes pulse-vein {
+            0%, 100% {
+                opacity: 0.3;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes fade-in-out-horror {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            10%, 90% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes drift-symbol {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.2;
+            }
+            90% {
+                opacity: 0.2;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse-dark {
+            0%, 100% {
+                opacity: 0.8;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes aura-pulse {
+            0%, 100% {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateX(-50%) scale(1.1);
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes glow-pulse {
+            0%, 100% {
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 0.8;
+            }
+        }
+
+        /* Interactive Button */
+        .summon-button {
+            margin-top: 3rem;
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-family: inherit;
+            background: linear-gradient(135deg, #1a3a2a 0%, #2d5a3d 100%);
+            border: 2px solid #7fff7f;
+            border-radius: 50px;
+            color: #7fff7f;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5), 0 0 20px rgba(127, 255, 127, 0.3);
+            transition: all 0.3s ease;
+            text-shadow: 0 0 10px rgba(127, 255, 127, 0.5);
+        }
+
+        .summon-button:hover {
+            background: linear-gradient(135deg, #2d5a3d 0%, #3d7a4d 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 30px rgba(127, 255, 127, 0.5);
+        }
+
+        .summon-button:active {
+            transform: translateY(0);
+        }
+
+        /* Awakened state */
+        .horror.awakened .tentacle {
+            animation-duration: 0.5s;
+        }
+
+        .horror.awakened .face-tentacle {
+            animation-duration: 0.3s;
+        }
+
+        .horror.awakened {
+            animation: eldritch-shake 0.7s;
+        }
+
+        @keyframes eldritch-shake {
+            0%, 100% { transform: rotate(0deg); }
+            10% { transform: rotate(-8deg) scale(1.05); }
+            20% { transform: rotate(8deg) scale(0.95); }
+            30% { transform: rotate(-8deg) scale(1.05); }
+            40% { transform: rotate(8deg) scale(0.95); }
+            50% { transform: rotate(-8deg) scale(1.05); }
+            60% { transform: rotate(8deg) scale(0.95); }
+            70% { transform: rotate(-8deg) scale(1.05); }
+            80% { transform: rotate(8deg) scale(0.95); }
+            90% { transform: rotate(-4deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="symbols" id="symbols"></div>
+    
+    <div class="container">
+        <h1>Meet Sloppy, Your Dashboard Cosmic Horror 🦑</h1>
+        
+        <div class="mascot-container">
+            <div class="speech-bubble">
+                <p id="speechText">Ph'nglui mglw'nafh...</p>
+            </div>
+            
+            <div class="horror" id="horror">
+                <div class="aura"></div>
+                <div class="tentacle left-outer"></div>
+                <div class="tentacle left-inner"></div>
+                <div class="tentacle right-inner"></div>
+                <div class="tentacle right-outer"></div>
+                <div class="head">
+                    <div class="vein vein1"></div>
+                    <div class="vein vein2"></div>
+                    <div class="vein vein3"></div>
+                    <div class="mark mark1"></div>
+                    <div class="mark mark2"></div>
+                    <div class="eye-small forehead">
+                        <div class="iris-small"></div>
+                    </div>
+                    <div class="eye left">
+                        <div class="iris">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye-glow"></div>
+                    </div>
+                    <div class="eye right">
+                        <div class="iris">
+                            <div class="pupil"></div>
+                        </div>
+                        <div class="eye-glow"></div>
+                    </div>
+                    <div class="eye-small extra-left">
+                        <div class="iris-small"></div>
+                    </div>
+                    <div class="eye-small extra-right">
+                        <div class="iris-small"></div>
+                    </div>
+                    <div class="maw">
+                        <div class="teeth">
+                            <div class="tooth"></div>
+                            <div class="tooth"></div>
+                            <div class="tooth"></div>
+                            <div class="tooth"></div>
+                            <div class="tooth"></div>
+                            <div class="tooth"></div>
+                        </div>
+                    </div>
+                    <div class="face-tentacle"></div>
+                    <div class="face-tentacle"></div>
+                    <div class="face-tentacle"></div>
+                    <div class="face-tentacle"></div>
+                    <div class="face-tentacle"></div>
+                </div>
+            </div>
+        </div>
+        
+        <p class="message">Your eldritch dashboard companion...</p>
+        <button class="summon-button" onclick="awakenSloppy()">🌀 Awaken Sloppy!</button>
+    </div>
+
+    <script>
+        // Array of eldritch messages
+        const messages = [
+            "Ph'nglui mglw'nafh...",
+            "The data hungers... 📊",
+            "Reality bends before metrics... 📈",
+            "I see beyond the veil... 👁️",
+            "The ancient ones approve... ✓",
+            "Time is meaningless... ∞",
+            "Your sanity is adequate... 🌀",
+            "The void acknowledges you... 🕳️",
+            "Dashboards from beyond... 💀",
+            "All hail the data! 🦑",
+            "It don't matter.  None of this matters.",
+            "That's a crying shame; get it done."
+        ];
+
+        let currentMessageIndex = 0;
+
+        // Function to cycle to next message
+        function showNextMessage() {
+            const speechText = document.getElementById('speechText');
+            currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+            speechText.textContent = messages[currentMessageIndex];
+        }
+
+        // Awaken the cosmic horror
+        function awakenSloppy() {
+            const horror = document.getElementById('horror');
+            
+            // Add awakened class
+            horror.classList.add('awakened');
+            
+            // Change message
+            showNextMessage();
+            
+            // Create visual effect
+            createEldrithBurst();
+            
+            // Remove awakened class after animation
+            setTimeout(() => {
+                horror.classList.remove('awakened');
+            }, 700);
+        }
+
+        // Create eldritch burst effect
+        function createEldrithBurst() {
+            for (let i = 0; i < 8; i++) {
+                const symbol = document.createElement('div');
+                symbol.style.position = 'fixed';
+                symbol.style.left = '50%';
+                symbol.style.top = '50%';
+                symbol.style.color = '#7fff7f';
+                symbol.style.fontSize = '2rem';
+                symbol.style.pointerEvents = 'none';
+                symbol.style.zIndex = '1000';
+                symbol.textContent = ['◈', '⬟', '⬡', '◉', '⊛', '⊚'][Math.floor(Math.random() * 6)];
+                
+                const angle = (i / 8) * Math.PI * 2;
+                const distance = 100;
+                
+                document.body.appendChild(symbol);
+                
+                setTimeout(() => {
+                    symbol.style.transition = 'all 1s ease-out';
+                    symbol.style.transform = `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px)`;
+                    symbol.style.opacity = '0';
+                }, 10);
+                
+                setTimeout(() => {
+                    symbol.remove();
+                }, 1010);
+            }
+        }
+
+        // Create floating eldritch symbols
+        function createSymbol() {
+            const symbols = document.getElementById('symbols');
+            const symbol = document.createElement('div');
+            symbol.className = 'symbol';
+            const eldritchSymbols = ['◈', '⬟', '⬡', '◉', '⊛', '⊚', '◬', '⬢', '⬣'];
+            symbol.textContent = eldritchSymbols[Math.floor(Math.random() * eldritchSymbols.length)];
+            symbol.style.left = Math.random() * 100 + '%';
+            symbol.style.fontSize = (Math.random() * 2 + 1) + 'rem';
+            symbol.style.animationDuration = (Math.random() * 15 + 15) + 's';
+            symbol.style.animationDelay = Math.random() * 5 + 's';
+            
+            symbols.appendChild(symbol);
+            
+            // Remove symbol after animation
+            setTimeout(() => {
+                symbol.remove();
+            }, 25000);
+        }
+
+        // Create symbols periodically
+        setInterval(createSymbol, 4000);
+        
+        // Initial symbols
+        for (let i = 0; i < 6; i++) {
+            createSymbol();
+        }
+
+        // Keyboard interaction - press Space to awaken
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                awakenSloppy();
+            }
+        });
+
+        // Cycle through messages automatically
+        setInterval(() => {
+            showNextMessage();
+        }, 8000);
+
+        // Random glitch effects
+        setInterval(() => {
+            const h1 = document.querySelector('h1');
+            h1.style.textShadow = `0 0 ${Math.random() * 30 + 10}px rgba(127, 255, 127, 0.5), 3px 3px 6px rgba(0,0,0,0.8)`;
+        }, 3000);
+    </script>
+</body>
+</html>
