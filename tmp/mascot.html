@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Dashboard Buddy 🐕</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    "Comic Sans MS", "Chalkboard SE", "Arial Rounded MT Bold",
+                    cursive;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                overflow: hidden;
+            }
+
+            .container {
+                text-align: center;
+                position: relative;
+            }
+
+            h1 {
+                color: #fff;
+                font-size: 3rem;
+                margin-bottom: 2rem;
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+                animation: bounce 2s infinite;
+            }
+
+            .mascot-container {
+                position: relative;
+                display: inline-block;
+            }
+
+            /* Cartoon Dog */
+            .dog {
+                width: 300px;
+                height: 320px;
+                position: relative;
+                animation: float 3s ease-in-out infinite;
+            }
+
+            /* Dog Head */
+            .head {
+                width: 200px;
+                height: 210px;
+                background: radial-gradient(
+                    ellipse at 50% 40%,
+                    #fdd998 0%,
+                    #f4a460 60%,
+                    #e8934a 100%
+                );
+                border-radius: 50% 50% 48% 48%;
+                position: absolute;
+                top: 40px;
+                left: 50px;
+                box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+                z-index: 2;
+            }
+
+            /* Muzzle / Snout */
+            .muzzle {
+                width: 110px;
+                height: 80px;
+                background: radial-gradient(
+                    ellipse at 50% 30%,
+                    #fff5e0 0%,
+                    #fde5c0 100%
+                );
+                border-radius: 50% 50% 50% 50%;
+                position: absolute;
+                bottom: 25px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Dog Ears */
+            .ear {
+                width: 65px;
+                height: 110px;
+                background: linear-gradient(180deg, #c05e20 0%, #a04010 100%);
+                border-radius: 55% 45% 30% 30%;
+                position: absolute;
+                top: 30px;
+                z-index: 1;
+                box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.15);
+            }
+
+            .ear::after {
+                content: "";
+                width: 35px;
+                height: 70px;
+                background: linear-gradient(180deg, #e8934a 0%, #d07530 100%);
+                border-radius: 55% 45% 30% 30%;
+                position: absolute;
+                top: 15px;
+                left: 15px;
+            }
+
+            .ear.left {
+                left: 30px;
+                transform: rotate(-25deg);
+                animation: wiggle-left 2s ease-in-out infinite;
+            }
+
+            .ear.right {
+                right: 30px;
+                transform: rotate(25deg);
+                animation: wiggle-right 2s ease-in-out infinite;
+            }
+
+            /* Eyebrows */
+            .eyebrow {
+                width: 30px;
+                height: 8px;
+                background: #8b4513;
+                border-radius: 5px;
+                position: absolute;
+                top: 58px;
+                z-index: 3;
+            }
+
+            .eyebrow.left {
+                left: 48px;
+                transform: rotate(-8deg);
+            }
+
+            .eyebrow.right {
+                right: 48px;
+                transform: rotate(8deg);
+            }
+
+            /* Dog Eyes */
+            .eye {
+                width: 38px;
+                height: 40px;
+                background: #fff;
+                border-radius: 50%;
+                position: absolute;
+                top: 72px;
+                border: 3px solid #333;
+                animation: blink 4s infinite;
+                box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.1);
+                z-index: 3;
+            }
+
+            .eye.left {
+                left: 45px;
+            }
+
+            .eye.right {
+                right: 45px;
+            }
+
+            /* Iris */
+            .iris {
+                width: 22px;
+                height: 22px;
+                background: radial-gradient(
+                    circle at 40% 40%,
+                    #6b4423,
+                    #3a1f08
+                );
+                border-radius: 50%;
+                position: absolute;
+                bottom: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+                animation: look 3s ease-in-out infinite;
+            }
+
+            /* Pupil */
+            .pupil {
+                width: 12px;
+                height: 12px;
+                background: #000;
+                border-radius: 50%;
+                position: absolute;
+                top: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Eye shine */
+            .eye-shine {
+                width: 8px;
+                height: 8px;
+                background: #fff;
+                border-radius: 50%;
+                position: absolute;
+                top: 3px;
+                right: 3px;
+                z-index: 4;
+            }
+
+            /* Cheek Blush */
+            .cheek {
+                width: 30px;
+                height: 18px;
+                background: rgba(255, 130, 130, 0.35);
+                border-radius: 50%;
+                position: absolute;
+                top: 120px;
+                z-index: 3;
+            }
+
+            .cheek.left {
+                left: 73px;
+            }
+
+            .cheek.right {
+                right: 73px;
+            }
+
+            /* Dog Nose */
+            .nose {
+                width: 32px;
+                height: 22px;
+                background: radial-gradient(
+                    ellipse at 40% 35%,
+                    #555 0%,
+                    #1a1a1a 70%
+                );
+                border-radius: 45% 45% 50% 50%;
+                position: absolute;
+                top: 112px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 4;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            }
+
+            .nose::after {
+                content: "";
+                width: 8px;
+                height: 5px;
+                background: rgba(255, 255, 255, 0.4);
+                border-radius: 50%;
+                position: absolute;
+                top: 5px;
+                left: 8px;
+            }
+
+            /* Dog Mouth */
+            .mouth {
+                position: absolute;
+                top: 132px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 3;
+            }
+
+            .mouth-line {
+                width: 2px;
+                height: 12px;
+                background: #6b4423;
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .mouth-curve {
+                width: 28px;
+                height: 16px;
+                border: 2.5px solid #6b4423;
+                border-color: transparent transparent #6b4423 transparent;
+                border-radius: 0 0 50% 50%;
+                position: absolute;
+                top: 8px;
+            }
+
+            .mouth-curve.left {
+                left: -28px;
+            }
+
+            .mouth-curve.right {
+                left: 0px;
+            }
+
+            .tongue {
+                width: 22px;
+                height: 28px;
+                background: linear-gradient(180deg, #ff7eb3 0%, #ff4d88 100%);
+                border-radius: 40% 40% 50% 50%;
+                position: absolute;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                animation: pant 1s ease-in-out infinite;
+                box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .tongue::after {
+                content: "";
+                width: 2px;
+                height: 18px;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 2px;
+                position: absolute;
+                top: 5px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Dog Spots */
+            .spot {
+                background: radial-gradient(ellipse, #a0592a 0%, #8b4513 100%);
+                border-radius: 50%;
+                position: absolute;
+                opacity: 0.7;
+            }
+
+            .spot1 {
+                width: 45px;
+                height: 38px;
+                top: 40px;
+                left: 20px;
+                transform: rotate(-15deg);
+            }
+
+            .spot2 {
+                width: 35px;
+                height: 30px;
+                top: 50px;
+                right: 25px;
+                transform: rotate(10deg);
+            }
+
+            /* Collar */
+            .collar {
+                width: 140px;
+                height: 22px;
+                background: linear-gradient(180deg, #e63946 0%, #c1121f 100%);
+                border-radius: 0 0 50% 50%;
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 5;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .collar-tag {
+                width: 18px;
+                height: 22px;
+                background: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
+                border-radius: 50% 50% 50% 50%;
+                position: absolute;
+                bottom: -16px;
+                left: 50%;
+                transform: translateX(-50%);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            }
+
+            .collar-tag::after {
+                content: "♥";
+                font-size: 10px;
+                position: absolute;
+                top: 4px;
+                left: 3.5px;
+                color: #c1121f;
+            }
+
+            /* Speech Bubble */
+            .speech-bubble {
+                background: #fff;
+                padding: 20px 30px;
+                border-radius: 20px;
+                position: absolute;
+                top: 60px;
+                right: -250px;
+                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+                animation: fade-in-out 4s ease-in-out infinite;
+            }
+
+            .speech-bubble::after {
+                content: "";
+                position: absolute;
+                top: 20px;
+                left: -18px;
+                width: 0;
+                height: 0;
+                border: 12px solid transparent;
+                border-right-color: #fff;
+                border-left: 0;
+            }
+
+            .speech-bubble p {
+                color: #667eea;
+                font-size: 1.2rem;
+                font-weight: bold;
+                white-space: nowrap;
+            }
+
+            /* Paw Print Decorations */
+            .paw-prints {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                pointer-events: none;
+                z-index: -1;
+            }
+
+            .paw {
+                position: absolute;
+                opacity: 0.15;
+                animation: drift 15s linear infinite;
+            }
+
+            /* Message */
+            .message {
+                color: #fff;
+                font-size: 1.5rem;
+                margin-top: 2rem;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Animations */
+            @keyframes float {
+                0%,
+                100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-20px);
+                }
+            }
+
+            @keyframes bounce {
+                0%,
+                100% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            @keyframes wiggle-left {
+                0%,
+                100% {
+                    transform: rotate(-25deg);
+                }
+                50% {
+                    transform: rotate(-35deg);
+                }
+            }
+
+            @keyframes wiggle-right {
+                0%,
+                100% {
+                    transform: rotate(25deg);
+                }
+                50% {
+                    transform: rotate(35deg);
+                }
+            }
+
+            @keyframes blink {
+                0%,
+                90%,
+                100% {
+                    transform: scaleY(1);
+                }
+                95% {
+                    transform: scaleY(0.05);
+                }
+            }
+
+            @keyframes look {
+                0%,
+                100% {
+                    transform: translateX(-50%);
+                }
+                25% {
+                    transform: translateX(calc(-50% + 4px));
+                }
+                75% {
+                    transform: translateX(calc(-50% - 4px));
+                }
+            }
+
+            @keyframes pant {
+                0%,
+                100% {
+                    transform: translateX(-50%) scaleY(1);
+                }
+                50% {
+                    transform: translateX(-50%) scaleY(1.15);
+                }
+            }
+
+            @keyframes fade-in-out {
+                0%,
+                100% {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                10%,
+                90% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes drift {
+                0% {
+                    transform: translateY(-100px) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+
+            /* Interactive Button */
+            .pet-button {
+                margin-top: 3rem;
+                padding: 15px 40px;
+                font-size: 1.3rem;
+                font-family: inherit;
+                background: #ffd700;
+                border: none;
+                border-radius: 50px;
+                color: #333;
+                font-weight: bold;
+                cursor: pointer;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                transition: all 0.3s ease;
+            }
+
+            .pet-button:hover {
+                background: #ffed4e;
+                transform: translateY(-3px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+            }
+
+            .pet-button:active {
+                transform: translateY(0);
+            }
+
+            /* Excited state */
+            .dog.excited .ear {
+                animation-duration: 0.3s;
+            }
+
+            .dog.excited {
+                animation: shake 0.5s;
+            }
+
+            @keyframes shake {
+                0%,
+                100% {
+                    transform: rotate(0deg);
+                }
+                25% {
+                    transform: rotate(-5deg);
+                }
+                75% {
+                    transform: rotate(5deg);
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="paw-prints" id="pawPrints"></div>
+
+        <div class="container">
+            <h1>Meet P&amp;E Dashboard Buddy! 🎉</h1>
+
+            <div class="mascot-container">
+                <div class="speech-bubble">
+                    <p id="speechText">Woof! I'm here to help!</p>
+                </div>
+
+                <div class="dog" id="dog">
+                    <div class="ear left"></div>
+                    <div class="ear right"></div>
+                    <div class="head">
+                        <div class="spot spot1"></div>
+                        <div class="spot spot2"></div>
+                        <div class="eyebrow left"></div>
+                        <div class="eyebrow right"></div>
+                        <div class="eye left">
+                            <div class="iris">
+                                <div class="pupil"></div>
+                            </div>
+                            <div class="eye-shine"></div>
+                        </div>
+                        <div class="eye right">
+                            <div class="iris">
+                                <div class="pupil"></div>
+                            </div>
+                            <div class="eye-shine"></div>
+                        </div>
+                        <div class="cheek left"></div>
+                        <div class="cheek right"></div>
+                        <div class="muzzle"></div>
+                        <div class="nose"></div>
+                        <div class="mouth">
+                            <div class="mouth-line"></div>
+                            <div class="mouth-curve left"></div>
+                            <div class="mouth-curve right"></div>
+                            <div class="tongue"></div>
+                        </div>
+                        <div class="collar">
+                            <div class="collar-tag"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="message">Your friendly dashboard companion!</p>
+            <button class="pet-button" onclick="petTheDog()">
+                🐾 Pet Buddy!
+            </button>
+        </div>
+
+        <script>
+            // Array of fun messages
+            const messages = [
+                "Woof! I'm here to help!",
+                "Dashboard looking good! 🎨",
+                "All systems go! 🚀",
+                "You're doing great! 💪",
+                "Woof woof! 🐕",
+                "Ready to fetch data! 📊",
+                "Tail wagging intensifies! 🌟",
+                "Best human ever! ❤️",
+            ];
+
+            let currentMessageIndex = 0;
+
+            // Pet the dog interaction
+            function petTheDog() {
+                const dog = document.getElementById("dog");
+                const speechText = document.getElementById("speechText");
+
+                // Add excited class
+                dog.classList.add("excited");
+
+                // Change message
+                currentMessageIndex =
+                    (currentMessageIndex + 1) % messages.length;
+                speechText.textContent = messages[currentMessageIndex];
+
+                // Remove excited class after animation
+                setTimeout(() => {
+                    dog.classList.remove("excited");
+                }, 500);
+            }
+
+            // Create floating paw prints
+            function createPawPrint() {
+                const pawPrints = document.getElementById("pawPrints");
+                const paw = document.createElement("div");
+                paw.className = "paw";
+                paw.textContent = "🐾";
+                paw.style.left = Math.random() * 100 + "%";
+                paw.style.fontSize = Math.random() * 2 + 1 + "rem";
+                paw.style.animationDuration = Math.random() * 10 + 10 + "s";
+                paw.style.animationDelay = Math.random() * 5 + "s";
+
+                pawPrints.appendChild(paw);
+
+                // Remove paw print after animation
+                setTimeout(() => {
+                    paw.remove();
+                }, 20000);
+            }
+
+            // Create paw prints periodically
+            setInterval(createPawPrint, 3000);
+
+            // Initial paw prints
+            for (let i = 0; i < 5; i++) {
+                createPawPrint();
+            }
+
+            // Keyboard interaction - press Space to pet
+            document.addEventListener("keydown", (e) => {
+                if (e.code === "Space") {
+                    e.preventDefault();
+                    petTheDog();
+                }
+            });
+
+            // Cycle through messages automatically
+            setInterval(() => {
+                const speechText = document.getElementById("speechText");
+                currentMessageIndex =
+                    (currentMessageIndex + 1) % messages.length;
+                speechText.textContent = messages[currentMessageIndex];
+            }, 8000);
+        </script>
+    </body>
+</html>
